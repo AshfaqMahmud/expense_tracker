@@ -1,4 +1,5 @@
 import 'package:expense_tracker/features/auth/presentation/pages/login_page.dart';
+import 'package:expense_tracker/features/navigation/main_scaffold.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
 
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
       ),
-      home: LoginPage(),
+      home: MainScaffold(),
     );
   }
 }
