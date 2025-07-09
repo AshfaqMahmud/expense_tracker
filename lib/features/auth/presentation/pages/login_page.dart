@@ -35,9 +35,9 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontSize: 34.0, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 70.0),
-              FrostedTextField(label: 'Email', controller: _userNameController),
+              frostedTextField(label: 'Email', controller: _userNameController),
               SizedBox(height: 16.0),
-              FrostedTextField(
+              frostedTextField(
                 label: 'Password',
                 controller: _passwordController,
                 obscureText: true, // Hide password input

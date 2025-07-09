@@ -43,20 +43,20 @@ class _RegisterPageState extends State<RegisterPage> {
                 style: TextStyle(fontSize: 34.0, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 30.0),
-              FrostedTextField(
+              frostedTextField(
                 label: 'Username',
                 controller: _userNameController,
               ),
               SizedBox(height: 16.0),
-              FrostedTextField(label: 'Email', controller: _emailController),
+              frostedTextField(label: 'Email', controller: _emailController),
               SizedBox(height: 16.0),
-              FrostedTextField(
+              frostedTextField(
                 label: 'Password',
                 controller: _passwordController,
                 obscureText: true,
               ),
               SizedBox(height: 16.0),
-              FrostedTextField(
+              frostedTextField(
                 label: 'Confirm Password',
                 controller: _confirmPasswordController,
                 obscureText: true,
