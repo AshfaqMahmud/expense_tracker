@@ -114,7 +114,7 @@ Widget _buildSettingItem({
     ),
     subtitle: Text(subtitle, style: TextStyle(color: Colors.grey)),
     onTap: () {
-      print('${title} Tapped');
+      print('$title Tapped');
     },
   );
 }
