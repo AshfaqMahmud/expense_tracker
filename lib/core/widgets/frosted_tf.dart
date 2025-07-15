@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget rostedTextField({
+Widget frostedTextField({
   String? label,
   TextEditingController? controller,
   bool obscureText = false,
