@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/widgets/premium_chart_v2.dart';
 import 'package:expense_tracker/data/chart/chart_data_service.dart';
 import 'package:expense_tracker/data/database/db_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,8 +13,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   double totalMonthlyExpense = 0;
+  double totalYearlyExpense = 0;
   String? totalAmount;
   late final ChartDataService _chartService;
+  final _currencyFormat = NumberFormat.currency(decimalDigits: 1, symbol: '');
 
   @override
   void initState() {
@@ -25,15 +28,18 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadTotalExpenses() async {
     try {
       final monthlyExpense = await _chartService.getMonthlyExpense();
+      final yearlyExpense = await _chartService.getYearlyExpense();
       setState(() {
         totalMonthlyExpense = monthlyExpense;
+        totalYearlyExpense = yearlyExpense;
         totalAmount = totalMonthlyExpense.toString();
         print(totalAmount);
       });
     } catch (e) {
       print('Error loading expenses: $e');
       setState(() {
-        totalMonthlyExpense = 0; // Fallback value
+        totalMonthlyExpense = 0;
+        totalYearlyExpense = 0; // Fallback value
       });
     }
   }
@@ -60,40 +66,77 @@ class _HomePageState extends State<HomePage> {
               //textDirection: TextDirection.ltr,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
-              width: double.infinity,
-              height: 100,
-              child: Card(
-                color: const Color.fromARGB(255, 178, 231, 255),
-                child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Total in this month',
-                        style: TextStyle(
-                          //fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        '  $totalMonthlyExpense BDT',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            _buildTotalMonthly(),
+            Divider(thickness: 2),
+            _buildTotalYearly(),
             PremiumChartV2(),
           ],
         ),
 
         //
+      ),
+    );
+  }
+
+  Widget _buildTotalMonthly() {
+    return SizedBox(
+      width: double.infinity,
+      height: 100,
+      child: Card(
+        color: Colors.limeAccent,
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Total in this month',
+                style: TextStyle(
+                  //fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              Text(
+                '  $totalMonthlyExpense BDT',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTotalYearly() {
+    return SizedBox(
+      width: double.infinity,
+      height: 100,
+      child: Card(
+        color: Colors.black,
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Total in this Year',
+                style: TextStyle(
+                  //fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                '  ${_currencyFormat.format(totalYearlyExpense)} BDT',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

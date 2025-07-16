@@ -99,10 +99,7 @@ class _CategoryChartState extends State<PremiumChartV2>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              const Color.fromARGB(26, 192, 191, 191),
-              const Color.fromARGB(179, 231, 230, 230),
-            ],
+            colors: [Colors.white, Colors.white],
           ),
           borderRadius: BorderRadius.circular(10),
         ),
@@ -203,7 +200,7 @@ class _CategoryChartState extends State<PremiumChartV2>
                 return Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
-                    value.isFinite ? '\$${value.toInt()}K' : '\$0',
+                    value.isFinite ? 'BDT ${value.toInt()}' : '\$0',
                     style: const TextStyle(fontSize: 10),
                   ),
                 );
@@ -273,7 +270,7 @@ class _CategoryChartState extends State<PremiumChartV2>
             const SizedBox(width: 4),
             Text(
               value.isFinite
-                  ? '\$${(value / 1000).toStringAsFixed(1)}K'
+                  ? 'BDT ${(value / 1000).toStringAsFixed(1)}K'
                   : '\$0',
               style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
             ),
