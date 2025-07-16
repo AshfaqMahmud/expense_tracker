@@ -31,6 +31,31 @@ class ChartDataService {
     return result;
   }
 
+  Future<double> getMonthlyExpense() async {
+    final db = await _databaseHelper.database;
+    final result = await db.rawQuery('''
+        SELECT SUM(amount) as total
+        FROM expenses
+        WHERE strftime('%m', date) = strftime('%m', 'now')
+    AND strftime('%Y', date) = strftime('%Y', 'now')
+        
+    ''');
+    // Handle the case when there are no expenses (SUM returns NULL)
+    final total = result.first['total'] as double?;
+    return total ?? 0;
+  }
+  Future<double> getYearlyExpense() async {
+    final db = await _databaseHelper.database;
+    final result = await db.rawQuery('''
+        SELECT SUM(amount) as total
+        FROM expenses
+        WHERE strftime('%Y', date) = strftime('%Y', 'now')
+    ''');
+    // Handle the case when there are no expenses (SUM returns NULL)
+    final total = result.first['total'] as double?;
+    return total ?? 0;
+  }
+
   String formatMonth(int month) {
     return DateFormat('MMM').format(DateTime(2023, month));
   }

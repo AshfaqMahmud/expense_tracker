@@ -23,11 +23,11 @@ class _CategoryChartState extends State<PremiumChartV2>
     _chartService = ChartDataService(DatabaseHelper());
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 100),
     );
     _animation = CurvedAnimation(
       parent: _animationController,
-      curve: Curves.decelerate,
+      curve: Curves.linearToEaseOut,
     );
     _loadData();
   }
