@@ -14,6 +14,8 @@ class ExpensesPage extends StatefulWidget {
 class _ExpensesPageState extends State<ExpensesPage> {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   List<Expense> _expenses = [];
+
+  // list and logic for selected expenses
   List<Expense> _selectedExpenses = [];
   bool _isSelecting = false;
 
@@ -180,7 +182,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
           child: _expenses.isEmpty
               ? const Center(child: Text('No expenses yet. Tap + to add one!'))
               : ListView.builder(
-                  physics: const BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),   // for iOS
                   itemCount: _expenses.length,
                   itemBuilder: (ctx, index) => Dismissible(
                     key: Key(_expenses[index].id),
