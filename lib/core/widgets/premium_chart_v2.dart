@@ -54,7 +54,7 @@ class _CategoryChartState extends State<PremiumChartV2>
             title: 'SPENDING BY CATEGORY',
             color: Colors.blue,
             child: _categoryData.isEmpty
-                ? const Center(child: CircularProgressIndicator())
+                ? const Center(child: Text('No Data to Show'))
                 : _buildCategoryChart(),
           ),
           const SizedBox(height: 24),
@@ -62,7 +62,7 @@ class _CategoryChartState extends State<PremiumChartV2>
             title: 'MONTHLY SPENDING',
             color: Colors.lightBlueAccent,
             child: _monthlyData.isEmpty
-                ? const Center(child: CircularProgressIndicator())
+                ? const Center(child: Text('No Data to Show'))
                 : _buildMonthlyChart(),
           ),
         ],
