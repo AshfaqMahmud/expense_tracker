@@ -1,4 +1,5 @@
 import 'package:expense_tracker/data/models/budget_model.dart';
+import 'package:expense_tracker/data/models/category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -8,110 +9,109 @@ class CreateBudgetPage extends StatefulWidget {
   @override
   State<CreateBudgetPage> createState() => _CreateBudgetPageState();
 }
+
 class _CreateBudgetPageState extends State<CreateBudgetPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _categoryController = TextEditingController();
-  final _amountController = TextEditingController();
-  DateTime _selectedDate = DateTime.now();
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _categoryController.dispose();
-    _amountController.dispose();
-    super.dispose();
-  }
+  List<TextEditingController> listController = [TextEditingController()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create New Budget'),
-        actions: [
-          IconButton(icon: const Icon(Icons.save), onPressed: _submitForm),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormField(
-                controller: _categoryController,
-                decoration: const InputDecoration(
-                  labelText: 'Category',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.category),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
+                child: Text(
+                  "Dynamic Text Field",
+                  
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a category';
-                  }
-                  return null;
+              ),
+              const SizedBox(height: 15),
+              ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                shrinkWrap: true,
+                itemCount: listController.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            height: 60,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF2E384E),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: TextFormField(
+                              controller: listController[index],
+                              autofocus: false,
+                              style: const TextStyle(color: Color(0xFFF8F8FF)),
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "Input Text Here",
+                                hintStyle: TextStyle(
+                                  color: Color.fromARGB(255, 132, 140, 155),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        index != 0
+                            ? GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    listController[index].clear();
+                                    listController[index].dispose();
+                                    listController.removeAt(index);
+                                  });
+                                },
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Color(0xFF6B74D6),
+                                  size: 35,
+                                ),
+                              )
+                            : const SizedBox(),
+                      ],
+                    ),
+                  );
                 },
               ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _amountController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Amount (৳)',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.currency_rupee),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an amount';
-                  }
-                  if (double.tryParse(value) == null) {
-                    return 'Please enter a valid number';
-                  }
-                  return null;
+              const SizedBox(height: 50),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    listController.add(TextEditingController());
+                  });
                 },
-              ),
-              const SizedBox(height: 20),
-              ListTile(
-                leading: const Icon(Icons.calendar_today),
-                title: const Text('Date'),
-                subtitle: Text(
-                  DateFormat('MMM dd, yyyy').format(_selectedDate),
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 15,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF444C60),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      "Add More",
+                      //style: GoogleFonts.nunito(color: const Color(0xFFF8F8FF)),
+                    ),
+                  ),
                 ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () => _selectDate(context),
-                ),
               ),
+              const SizedBox(width: 10),
             ],
           ),
         ),
       ),
     );
-  }
-
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      final newBudget = BudgetItem(
-        id: DateTime.now().millisecondsSinceEpoch, // Temporary ID
-        category: _categoryController.text,
-        isCompleted: false,
-        plannedAmount: double.parse(_amountController.text),
-        monthYear: _selectedDate,
-      );
-      Navigator.pop(context, newBudget);
-    }
   }
 }
