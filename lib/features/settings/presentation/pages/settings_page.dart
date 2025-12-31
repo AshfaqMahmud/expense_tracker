@@ -1,3 +1,5 @@
+import 'package:expense_tracker/core/widgets/userprofile.dart';
+import 'package:expense_tracker/core/widgets/userprofile2.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -21,7 +23,7 @@ class SettingsPage extends StatelessWidget {
             _buildSettingItem(
               title: 'Account Details',
               subtitle: 'Manage your account details',
-
+              onTap: () => _navigateToUserPage(context),
               icon: Icon(Icons.person_3_outlined),
             ),
             _buildSettingItem(
@@ -85,6 +87,16 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
+void _navigateToUserPage(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) =>
+          MinimalProfileV2(), // Replace with your actual user page
+    ),
+  );
+}
+
 Widget _buildSectionHeader(String title) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 8.0),
@@ -102,8 +114,8 @@ Widget _buildSectionHeader(String title) {
 Widget _buildSettingItem({
   required String title,
   required String subtitle,
-  //required bool isEnabled,
   required Icon icon,
+  VoidCallback? onTap, // Function pointer parameter (optional)
 }) {
   return ListTile(
     contentPadding: EdgeInsets.zero,
@@ -113,8 +125,9 @@ Widget _buildSettingItem({
       style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black87),
     ),
     subtitle: Text(subtitle, style: TextStyle(color: Colors.grey)),
-    onTap: () {
-      print('$title Tapped');
-    },
+    onTap: onTap, // Pass the function pointer here
+    trailing: onTap != null
+        ? Icon(Icons.chevron_right, color: Colors.grey)
+        : null,
   );
 }

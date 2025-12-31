@@ -1,6 +1,5 @@
 // lib/features/navigation/main_scaffold.dart
 import 'package:expense_tracker/core/widgets/bottom_nav_bar.dart';
-import 'package:expense_tracker/features/budget/presentation/budget_page.dart';
 import 'package:expense_tracker/features/budget/presentation/create_budget.dart';
 import 'package:expense_tracker/features/expenses/presentation/pages/exp_page.dart';
 import 'package:expense_tracker/features/home/presentation/home_page.dart';

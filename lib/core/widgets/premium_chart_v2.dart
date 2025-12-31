@@ -57,7 +57,7 @@ class _CategoryChartState extends State<PremiumChartV2>
                 ? const Center(child: Text('No Data to Show'))
                 : _buildCategoryChart(),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 40),
           _buildChartCard(
             title: 'MONTHLY SPENDING',
             color: Colors.lightBlueAccent,
@@ -150,88 +150,317 @@ class _CategoryChartState extends State<PremiumChartV2>
     );
   }
 
-  Widget _buildMonthlyChart() {
-    final maxValue = _monthlyData.fold<double>(0.0, (max, item) {
-      try {
-        final value = (item['total'] as num).toDouble();
-        return value.isFinite ? (value > max ? value : max) : max;
-      } catch (e) {
-        return max;
-      }
-    });
+  // Widget _buildMonthlyChart() {
+  //   final maxValue = _monthlyData.fold<double>(0.0, (max, item) {
+  //     try {
+  //       final value = (item['total'] as num).toDouble();
+  //       return value.isFinite ? (value > max ? value : max) : max;
+  //     } catch (e) {
+  //       return max;
+  //     }
+  //   });
+  //
+  //   // Define month names
+  //   final monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  //     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  //
+  //
+  //   return BarChart(
+  //     BarChartData(
+  //       alignment: BarChartAlignment.spaceEvenly,
+  //       barTouchData: BarTouchData(
+  //         enabled: true,
+  //         touchTooltipData: BarTouchTooltipData(
+  //           getTooltipItem: (group, groupIndex, rod, rodIndex) {
+  //
+  //             final monthIndex = group.x.toInt();
+  //             final monthName = monthIndex < monthNames.length
+  //                 ? monthNames[monthIndex]
+  //                 : 'M${monthIndex + 1}';
+  //             final value = rod.toY;
+  //             return BarTooltipItem(
+  //               // value.isFinite
+  //               //     ? '\$${(value / 1000).toStringAsFixed(1)}K'
+  //               //     : '\$0',
+  //               '${monthName}\nBDT ${value.toInt()}',
+  //               const TextStyle(color: Colors.black),
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //       titlesData: FlTitlesData(
+  //         bottomTitles: AxisTitles(
+  //           sideTitles: SideTitles(
+  //             showTitles: true,
+  //             getTitlesWidget: (value, meta) {
+  //
+  //               final index = value.toInt();
+  //               if (index < 0 || index >= _monthlyData.length) {
+  //                 return Container();
+  //               }
+  //
+  //               String monthText;
+  //               // Check if your data contains month information
+  //               if (_monthlyData[index].containsKey('month')) {
+  //                 // If data has month number (1-12)
+  //                 final monthNum = _monthlyData[index]['month'];
+  //                 if (monthNum is num) {
+  //                   monthText = monthNames[(monthNum.toInt() - 1) % 12];
+  //                 } else {
+  //                   monthText = 'M${index + 1}';
+  //                 }
+  //               } else {
+  //                 // Use short month names based on index
+  //                 monthText = index < monthNames.length
+  //                     ? monthNames[index]
+  //                     : 'M${index + 1}';
+  //               }
+  //               return Padding(
+  //                 padding: const EdgeInsets.only(top: 8.0),
+  //                 child: Text(
+  //                   //'M${value.toInt() + 1}',
+  //                     monthText,
+  //                   style: const TextStyle(fontSize: 11),
+  //                 ),
+  //               );
+  //             },
+  //             reservedSize: 20, // Adjusted to accommodate text
+  //           ),
+  //         ),
+  //         rightTitles: AxisTitles(
+  //           sideTitles: SideTitles(
+  //             showTitles: true,
+  //             getTitlesWidget: (value, meta) {
+  //               return Padding(
+  //                 padding: const EdgeInsets.only(left: 8.0),
+  //                 child: Text(
+  //                   value.isFinite ? 'BDT ${value.toInt()}' : '\$0',
+  //                   style: const TextStyle(fontSize: 10),
+  //                 ),
+  //               );
+  //             },
+  //             reservedSize: 50,
+  //           ),
+  //         ),
+  //         leftTitles: const AxisTitles(),
+  //         topTitles: const AxisTitles(),
+  //       ),
+  //       gridData: const FlGridData(show: false),
+  //       borderData: FlBorderData(show: false),
+  //       barGroups: _monthlyData.map((data) {
+  //         final value = (data['total'] as num).toDouble();
+  //         return BarChartGroupData(
+  //           x: _monthlyData.indexOf(data),
+  //           barRods: [
+  //             BarChartRodData(
+  //               toY: value.isFinite ? value : 0,
+  //               color: Colors.black,
+  //               width: 18,
+  //               borderRadius: BorderRadius.circular(6),
+  //               backDrawRodData: BackgroundBarChartRodData(
+  //                 show: true,
+  //                 toY: maxValue > 0 ? maxValue * 1.1 : 1,
+  //                 color: Colors.grey[200],
+  //               ),
+  //             ),
+  //           ],
+  //         );
+  //       }).toList(),
+  //     ),
+  //   );
+  // }
 
-    return BarChart(
-      BarChartData(
-        alignment: BarChartAlignment.spaceEvenly,
-        barTouchData: BarTouchData(
-          enabled: true,
-          touchTooltipData: BarTouchTooltipData(
-            getTooltipItem: (group, groupIndex, rod, rodIndex) {
-              final value = rod.toY;
-              return BarTooltipItem(
-                value.isFinite
-                    ? '\$${(value / 1000).toStringAsFixed(1)}K'
-                    : '\$0',
-                const TextStyle(color: Colors.white),
+  Widget _buildMonthlyChart() {
+    // First, debug print the data
+    print('=== MONTHLY DATA DEBUG ===');
+    print('Number of months: ${_monthlyData.length}');
+
+    if (_monthlyData.isEmpty) {
+      return Center(
+        child: Text('No monthly data available', style: TextStyle(color: Colors.grey)),
+      );
+    }
+
+    for (int i = 0; i < _monthlyData.length; i++) {
+      print('Month ${i + 1}: ${_monthlyData[i]}');
+    }
+
+    // Calculate max value
+    double maxValue = 0;
+    for (var data in _monthlyData) {
+      try {
+        final value = (data['total'] as num).toDouble();
+        if (value.isFinite && value > maxValue) {
+          maxValue = value;
+        }
+      } catch (e) {
+        print('Error parsing value: $e');
+      }
+    }
+
+    print('Max value: $maxValue');
+
+    // Define month names
+    final monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    // If maxValue is 0, set a default scale
+    if (maxValue <= 0) {
+      maxValue = 1000; // Default scale
+    }
+
+    return Container(
+      height: 220, // Fixed height for the chart container
+      child: BarChart(
+        BarChartData(
+          alignment: BarChartAlignment.spaceEvenly,
+          maxY: maxValue * 1.2, // Add 20% padding at top
+          minY: 0,
+
+          barTouchData: BarTouchData(
+            enabled: true,
+            touchTooltipData: BarTouchTooltipData(
+              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                final monthIndex = group.x.toInt();
+                final monthName = monthIndex < monthNames.length
+                    ? monthNames[monthIndex]
+                    : 'M${monthIndex + 1}';
+                final value = rod.toY;
+                return BarTooltipItem(
+                  '$monthName\nBDT ${value.toInt()}',
+                  const TextStyle(color: Colors.white),
+                );
+              },
+              //getTooltipColor: (group, groupIndex, rod, rodIndex) => Colors.black87,
+            ),
+          ),
+
+          titlesData: FlTitlesData(
+            show: true,
+
+            // Bottom titles (months)
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) {
+                  final index = value.toInt();
+                  if (index >= 0 && index < _monthlyData.length) {
+                    String monthText;
+
+                    // Try to get month name from data
+                    if (_monthlyData[index].containsKey('month')) {
+                      final monthNum = _monthlyData[index]['month'];
+                      if (monthNum is num) {
+                        final monthIndex = (monthNum.toInt() - 1) % 12;
+                        monthText = monthNames[monthIndex];
+                      } else {
+                        monthText = monthNames[index % 12];
+                      }
+                    } else {
+                      monthText = monthNames[index % 12];
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        monthText,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
+                reservedSize: 30,
+              ),
+            ),
+
+            // Left titles (Y-axis values)
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) {
+                  if (value >= 0) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 4.0),
+                      child: Text(
+                        'BDT ${value.toInt()}',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
+                interval: maxValue / 5, // Show about 5 labels
+                reservedSize: 40,
+              ),
+            ),
+
+            // Remove right titles since we have left titles
+            rightTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+
+            topTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+          ),
+
+          // Enable grid for better visibility
+          gridData: FlGridData(
+            show: true,
+            drawVerticalLine: false,
+            getDrawingHorizontalLine: (value) {
+              return FlLine(
+                color: Colors.grey[200],
+                strokeWidth: 1,
               );
             },
           ),
-        ),
-        titlesData: FlTitlesData(
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (value, meta) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    'M${value.toInt() + 1}',
-                    style: const TextStyle(fontSize: 11),
-                  ),
-                );
-              },
-              reservedSize: 20, // Adjusted to accommodate text
+
+          // Enable border
+          borderData: FlBorderData(
+            show: true,
+            border: Border(
+              bottom: BorderSide(color: Colors.grey[400]!, width: 1),
+              left: BorderSide(color: Colors.grey[400]!, width: 1),
             ),
           ),
-          rightTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (value, meta) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    value.isFinite ? 'BDT ${value.toInt()}' : '\$0',
-                    style: const TextStyle(fontSize: 10),
-                  ),
-                );
-              },
-              reservedSize: 50,
-            ),
-          ),
-          leftTitles: const AxisTitles(),
-          topTitles: const AxisTitles(),
-        ),
-        gridData: const FlGridData(show: false),
-        borderData: FlBorderData(show: false),
-        barGroups: _monthlyData.map((data) {
-          final value = (data['total'] as num).toDouble();
-          return BarChartGroupData(
-            x: _monthlyData.indexOf(data),
-            barRods: [
-              BarChartRodData(
-                toY: value.isFinite ? value : 0,
-                color: Colors.black,
-                width: 18,
-                borderRadius: BorderRadius.circular(6),
-                backDrawRodData: BackgroundBarChartRodData(
-                  show: true,
-                  toY: maxValue > 0 ? maxValue * 1.1 : 1,
-                  color: Colors.grey[200],
+
+          // Bar groups
+          barGroups: _monthlyData.asMap().entries.map((entry) {
+            final index = entry.key;
+            final data = entry.value;
+
+            double value;
+            try {
+              value = (data['total'] as num).toDouble();
+              if (!value.isFinite) value = 0;
+            } catch (e) {
+              print('Error converting value for index $index: $e');
+              value = 0;
+            }
+
+            print('Bar group $index: value = $value');
+
+            return BarChartGroupData(
+              x: index,
+              barRods: [
+                BarChartRodData(
+                  toY: value,
+                  color: Colors.blueAccent,
+                  width: 20,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-              ),
-            ],
-          );
-        }).toList(),
+              ],
+            );
+          }).toList(),
+        ),
       ),
     );
   }

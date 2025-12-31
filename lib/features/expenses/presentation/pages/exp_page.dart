@@ -164,11 +164,12 @@ class _ExpensesPageState extends State<ExpensesPage> {
             : null,
       ),
       body: _buildBody(),
+      backgroundColor: Color(0xACD4E8F5),
       floatingActionButton: _isSelecting
           ? null
           : FloatingActionButton(
               backgroundColor: Colors.black,
-              foregroundColor: Colors.redAccent,
+              foregroundColor: Colors.white,
               onPressed: _openAddExpenseDialog,
               child: const Icon(Icons.add),
             ),
@@ -253,7 +254,7 @@ class ExpenseItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: ListTile(
         leading: Icon(
           expense.getCategoryIcon(),

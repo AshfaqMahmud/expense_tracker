@@ -320,7 +320,7 @@ class _AddExpenseModalState extends State<AddExpenseModal> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedCategory,
+                initialValue: _selectedCategory,
                 decoration: const InputDecoration(
                   labelText: 'Category',
                   border: OutlineInputBorder(),
@@ -340,7 +340,7 @@ class _AddExpenseModalState extends State<AddExpenseModal> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedPaymentMethod,
+                initialValue: _selectedPaymentMethod,
                 decoration: const InputDecoration(
                   labelText: 'Payment Method',
                   border: OutlineInputBorder(),

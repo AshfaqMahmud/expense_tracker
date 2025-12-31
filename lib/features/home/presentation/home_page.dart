@@ -4,6 +4,8 @@ import 'package:expense_tracker/data/database/db_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/widgets/testmonthlychart.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -70,6 +72,7 @@ class _HomePageState extends State<HomePage> {
             Divider(thickness: 2),
             _buildTotalYearly(),
             PremiumChartV2(),
+            //MonthlyChartWidget(),
           ],
         ),
 
